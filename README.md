@@ -2,6 +2,11 @@
 
 Console App to send messages to an Event Hub.
 
+## Requirements
+
+* Visual Studio Code or Visual Studio
+* .NET Core 3.1 SDK
+
 ## Setup
 
 For the Console App to run you need access to an Event Hub in Azure.
