@@ -2,7 +2,7 @@
   "profiles": {
     "MJR076": {
       "commandName": "Project",
-      "commandLineArgs": "--quantity 170 --interval 1 --duration 30"
+      "commandLineArgs": "--quantity 10 --interval 1 --duration 10"
     }
   }
 }

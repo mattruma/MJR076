@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MJR076
 {
@@ -45,7 +46,7 @@ namespace MJR076
 
             var message = await File.ReadAllTextAsync("sample.json");
 
-            var timer = new System.Timers.Timer(interval * 1000);
+            var timer = new Timer(interval * 1000);
 
             timer.Elapsed += async (sender, e) => await ExecuteAsync(eventHubProducerClient, quantity, message);
 
@@ -56,12 +57,17 @@ namespace MJR076
 
             Console.WriteLine("{0}: Started", _startedAt);
 
-            while (DateTime.Now < _stopAt)
+            while (true)
             {
-
+                if (DateTime.Now > _stopAt)
+                {
+                    timer.Stop();
+                    break;
+                }
             }
 
             Console.WriteLine("{0}: Stopped", DateTime.Now);
+            Console.ReadKey();
         }
 
         public static async Task SendMessageAsync(
@@ -88,7 +94,7 @@ namespace MJR076
             var stopWatch = new Stopwatch();
 
             stopWatch.Start();
-            
+
             var tasks = new List<Task>();
 
             for (var messageIndex = 0; messageIndex < quantity; messageIndex++)
@@ -98,16 +104,18 @@ namespace MJR076
 
             var startedAt = DateTime.Now;
 
-            Console.WriteLine("{0}: Sending {1} message(s)...", startedAt, quantity);
-
             await Task.WhenAll(tasks);
 
             var ts = stopWatch.Elapsed;
 
-            var elapsedTime = 
-                (ts.Hours * 60 * 60 * 1000) + (ts.Minutes * 60 * 1000)+ (ts.Seconds * 1000) + ts.Milliseconds;
+            var elapsedTime =
+                (ts.Hours * 60 * 60 * 1000) + (ts.Minutes * 60 * 1000) + (ts.Seconds * 1000) + ts.Milliseconds;
 
-            Console.WriteLine("{0}: Message(s) sent, took {1:N0} millisecond(s).", DateTime.Now, elapsedTime);
+            var elapsedTimeString = $"{ts.Milliseconds} millisecond(s)";
+
+            if (elapsedTime > 1000) elapsedTimeString = $"{ts.Seconds} second(s)";
+
+            Console.WriteLine("{0}: Sent {1:N0} message(s), took {2}.", DateTime.Now, quantity, elapsedTimeString);
         }
     }
 }
