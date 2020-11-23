@@ -3,6 +3,7 @@ using Azure.Messaging.EventHubs.Producer;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,9 +35,7 @@ namespace MJR076
             Console.ResetColor();
             Console.WriteLine("Event Hub Spammer");
             Console.WriteLine();
-            Console.WriteLine("Quantity     : {0:N0}", quantity);
-            Console.WriteLine("Interval     : {0:N0}", interval);
-            Console.WriteLine("Duration     : {0:N0}", duration);
+            Console.WriteLine("Sending {0:N0} message(s) every {1:N0} second(s) for {2:N0} second(s)", quantity, interval, duration);
             Console.WriteLine();
 
             var eventHubProducerClient =
@@ -86,8 +85,10 @@ namespace MJR076
             int quantity,
             string message)
         {
-            Console.WriteLine("{0}: Sending {1} message(s)...", DateTime.Now, quantity);
+            var stopWatch = new Stopwatch();
 
+            stopWatch.Start();
+            
             var tasks = new List<Task>();
 
             for (var messageIndex = 0; messageIndex < quantity; messageIndex++)
@@ -95,7 +96,18 @@ namespace MJR076
                 tasks.Add(Task.Run(async () => await SendMessageAsync(eventHubProducerClient, message)));
             }
 
+            var startedAt = DateTime.Now;
+
+            Console.WriteLine("{0}: Sending {1} message(s)...", startedAt, quantity);
+
             await Task.WhenAll(tasks);
+
+            var ts = stopWatch.Elapsed;
+
+            var elapsedTime = 
+                (ts.Hours * 60 * 60 * 1000) + (ts.Minutes * 60 * 1000)+ (ts.Seconds * 1000) + ts.Milliseconds;
+
+            Console.WriteLine("{0}: Message(s) sent, took {1:N0} millisecond(s).", DateTime.Now, elapsedTime);
         }
     }
 }

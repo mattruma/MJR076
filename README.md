@@ -28,7 +28,7 @@ Note, the `EventHub_SecondaryConnectionString` is not required yet.
 
 ## Execution
 
-To run the Consol App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 10 --interval 1 --duration 30`.
+To run the Consol App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 10 --interval 1 --duration 10`.
 
 This will send 10 messages every 1 second for 30 seconds.
 
