@@ -2,7 +2,7 @@
   "profiles": {
     "MJR076": {
       "commandName": "Project",
-      "commandLineArgs": "--number-of-batches 1 --number-of-messages 10"
+      "commandLineArgs": "--quantity 170 --interval 1 --duration 30"
     }
   }
 }
