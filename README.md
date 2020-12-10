@@ -29,4 +29,6 @@ Open the directory in your favorite terminal application and run `.\ConsoleApp.e
 
 ## Notes
 
-I did try getting this to work with .NET 5.0 but ran into an isse with `CreateBatchOptions` method of the `EventHubProducerClient` client. Kept throwing an exception.
+I did try getting this to work with .NET 5.0 but ran into an isse with `CreateBatchOptions` method of the `EventHubProducerClient` client. 
+
+It kept throwing an `Exception`.
