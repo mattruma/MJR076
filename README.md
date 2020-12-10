@@ -9,7 +9,9 @@ Console App to send messages to an Event Hub.
 
 ## Setup
 
-You can either open the project in Visual Studio code or download the `Publish.zip`, which a pre-compiled version of the application and then follow the instructions in the Execution section of this document.
+You can either open the project in Visual Studio code or download the `Publish.zip`, which is a pre-compiled version of the application.
+
+Then just follow the instructions in the Execution section of this document.
 
 For the Console App to run you need access to an Event Hub in Azure and the Event Hub Connection String, e.g. `Endpoint=sb://EVENT_HUB_NAMESPACE.servicebus.windows.net/;SharedAccessKeyName=SAS_NAME;SharedAccessKey=SAS_KEY;`
 
