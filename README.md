@@ -28,7 +28,7 @@ Note, the `EventHub_SecondaryConnectionString` is not required yet.
 
 ## Execution
 
-To run the Consol App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 200 --interval 1 --duration 600 --event-hub-connection-string "EVENT_HUB_CONNECTION_STRING`.
+To run the Console App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 200 --interval 1 --duration 600 --event-hub-connection-string "EVENT_HUB_CONNECTION_STRING`.
 
 This will send 200 messages every 1 second for 600 seconds.
 
