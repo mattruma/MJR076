@@ -28,10 +28,8 @@ Note, the `EventHub_SecondaryConnectionString` is not required yet.
 
 ## Execution
 
-To run the Consol App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 10 --interval 1 --duration 10`.
+To run the Consol App, open in VS Code and at the terminal prompt enter `dotnet run --quantity 200 --interval 1 --duration 600 --event-hub-connection-string "EVENT_HUB_CONNECTION_STRING`.
 
-This will send 10 messages every 1 second for 30 seconds.
-
-![Visual Studio Code - Output](2020-11-23_11-39-22.jpg)
+This will send 200 messages every 1 second for 600 seconds.
 
 I did try getting this to work with .NET 5.0 but ran into an isse with `CreateBatchOptions` method of the `EventHubProducerClient` client. Kept throwing an exception.
