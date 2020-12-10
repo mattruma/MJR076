@@ -1,6 +1,5 @@
 ﻿using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,39 +11,52 @@ using System.Timers;
 namespace MJR076
 {
     class Program
-    {
-        // https://www.c-sharpcorner.com/article/azure-event-hub-implementation-using-net-core-console-app/
-        // https://www.thecodebuzz.com/parse-command-line-argument-system-commandline/
-
-        protected static IConfiguration _configuration;
+    {     
         protected static DateTime _startedAt;
         protected static DateTime _stopAt;
 
         /// <param name="quantity">The number of messages to send.</param>
         /// <param name="interval">The interval, expressed in seconds, at which to send messages.</param>
         /// <param name="duration">The duration, expressed in seconds, after which to stop sending messages.</param>
+        /// <param name="fileName">The name of the file to use as a template for the message.</param>
+        /// <param name="eventHubConnectionString">The event hub connection string.</param>
+        /// <param name="eventHubName">The name of the event hub to send messages to and if not included in the eventHubConnectionString.</param>
         public static async Task Main(
+            string eventHubConnectionString,
+            string eventHubName,
             int quantity = 10,
             int interval = 1,
-            int duration = 60)
+            int duration = 60,
+            string fileName = "sample.json")
         {
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
-                .Build();
-
             Console.ResetColor();
             Console.WriteLine("Event Hub Spammer");
             Console.WriteLine();
             Console.WriteLine("Sending {0:N0} message(s) every {1:N0} second(s) for {2:N0} second(s)", quantity, interval, duration);
             Console.WriteLine();
 
+            var eventHubConnectionStringParts = 
+                eventHubConnectionString.Split(";");
+
+            if (eventHubConnectionStringParts.Length == 4)
+            {
+                eventHubName =
+                    eventHubConnectionStringParts[3].Split("=")[1];
+                eventHubConnectionString =
+                    eventHubConnectionStringParts[0] + ";" + eventHubConnectionStringParts[1] + ";" + eventHubConnectionStringParts[2];
+            }
+
+            Console.WriteLine($"File Name                   : {fileName}");
+            Console.WriteLine($"Event Hub Connection String : {eventHubConnectionString}");
+            Console.WriteLine($"Event Hub Name              : {eventHubName}");
+            Console.WriteLine();
+
             var eventHubProducerClient =
                 new EventHubProducerClient(
-                    _configuration["EventHub_PrimaryConnectionString"],
-                    _configuration["EventHub_Name"]);
+                    eventHubConnectionString,
+                    eventHubName);
 
-            var message = await File.ReadAllTextAsync("sample.json");
+            var message = await File.ReadAllTextAsync(fileName);
 
             var timer = new Timer(interval * 1000);
 
@@ -99,6 +111,10 @@ namespace MJR076
 
             for (var messageIndex = 0; messageIndex < quantity; messageIndex++)
             {
+                var messageToSend = message;
+
+                messageToSend = messageToSend.Replace("{{CURRENTDATETIME}}", DateTime.UtcNow.ToString());
+
                 tasks.Add(Task.Run(async () => await SendMessageAsync(eventHubProducerClient, message)));
             }
 

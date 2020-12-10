@@ -10,8 +10,6 @@ Scratch.md
 *.vs
 *.vscode
 
-# Bicept
-
 # Terraform
 *.tfstate
 *.tfstate.backup
